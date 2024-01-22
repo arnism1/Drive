@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Drive.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240122084333_ExtendIdentity")]
-    partial class ExtendIdentity
+    [Migration("20240122094128_XXY")]
+    partial class XXY
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -8,7 +8,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
-@inject IEmailSender<ApplicationUser> EmailSender
+@* @inject IEmailSender EmailSender *@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
@@ -84,6 +84,13 @@
         user.Vorname = Input.Vorname;
         user.Nachname = Input.Nachname;
         user.MitarbeiterID = Input.MitarbeiterID;
+        // Create the user in the database
+        var result = await UserManager.CreateAsync(user, Input.Password);
+        if (!result.Succeeded)
+        {
+            identityErrors = result.Errors;
+            return;
+        }
         // Continue with the registration process
         // ...
     }
