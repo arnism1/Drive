@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drive", "Drive\Drive.csproj", "{B5CF9F03-2A63-4B63-BD8F-F76CC4B24898}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drive.Client", "Drive.Client\Drive.Client.csproj", "{FC005679-DCF4-46D3-B8E1-58D4E7451F3C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5CF9F03-2A63-4B63-BD8F-F76CC4B24898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CF9F03-2A63-4B63-BD8F-F76CC4B24898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CF9F03-2A63-4B63-BD8F-F76CC4B24898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CF9F03-2A63-4B63-BD8F-F76CC4B24898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC005679-DCF4-46D3-B8E1-58D4E7451F3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC005679-DCF4-46D3-B8E1-58D4E7451F3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC005679-DCF4-46D3-B8E1-58D4E7451F3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC005679-DCF4-46D3-B8E1-58D4E7451F3C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2B0EC800-6642-46BE-9949-C9779E59F151}
+	EndGlobalSection
+EndGlobal
