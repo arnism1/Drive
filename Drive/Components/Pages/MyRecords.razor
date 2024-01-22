@@ -23,7 +23,7 @@
         <div class="col">
             <EditForm Model="@mytour" FormName="addEntry" OnValidSubmit="SaveEntry">
                 <div class="form-group">
-                    <label for="companyCars" class="text-center mb-2">CompanyCar</label>
+                    <label for="companyCars" class="text-center mb-2">Auto</label>
                     <select id="companyCars" @bind="selectedProjectId" class="form-control mb-3">
                         @foreach (var project in cars)
                         {
@@ -37,7 +37,9 @@
                 </div>
                 <div class="form-group w-50 ">
                     <label for="date" class="text-center mb-2">Datum</label>
-                    <input id="date" @bind-value="mytour.Date" readonly="readonly" class="form-control mb-4 align-self-center" type="date" />
+                    <input asp-for="mytour.Date" class="form-control mb-4 align-self-center" type="date" />
+
+
                 </div>
                 <div class="form-group w-50 ">
                     <label for="start" class="text-center mb-2">Beginn</label>
@@ -47,27 +49,53 @@
                     <label for="end" class="text-center mb-2">Abschluss</label>
                     <input id="end" @bind-value="mytour.End" class="form-control mb-4 align-self-center" type="time" />
                 </div>
-                <button class="btn btn-primary w-50 mb-2">Buchung abschließen</button>
+                <div class="form-group w-50">
+                    <label for="odometerStart" class="text-center mb-2">Odometer Start</label>
+                    <input id="odometerStart" class="form-control mb-4 align-self-center" @bind-value="mytour.OdometerStart" />
+                </div>
+                <div class="form-group w-50">
+                    <label for="odometerEnd" class="text-center mb-2">Odometer End</label>
+                    <input id="odometerEnd" class="form-control  mb-4 align-self-center" @bind-value="mytour.OdometerEnd" />
+                </div>
+
+                <button class="btn btn-primary w-20 mb-2">Buchung abschließen</button>
             </EditForm>
         </div>
+        <p>
+
+        </p>
         <div class="col">
             <table class="table">
                 <thead>
                     <tr>
-                    <th>Id</th>
+                    @* <th>Id</th> *@
                     <th>Titel</th>
                     <th>Beschreibung</th>
                     <th>Stunden</th>
+                        <th>Km Abfart</th>
+                        <th>Km Ankunft</th>
+                        <th>Reiseweg</th>
+                        <th>Mitarbeiter</th>
+
+
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var entry in tours)
                     {
                         <tr>
-                            <td>@entry.Id</td>
+                            @* <td>@entry.Id</td> *@
                             <td>@entry.Car.Brand</td>
                             <td>@entry.Car.Model</td>
                             <td>@entry.HoursWorked</td>
+                            <td>@entry.OdometerStart</td>
+                            <td>@entry.OdometerEnd</td>
+                            <td>@entry.DistanceTraveled</td>
+                            <td>@entry.Employee</td>
+                            <td>
+                                <button @onclick="() => EditEntry(entry)">Edit</button>
+                                <button @onclick="() => DeleteEntry(entry)">Delete</button>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -77,23 +105,31 @@
 </div>
 
 @code {
+    // Current logged in user
     ApplicationUser currentUser;
+
     List<Car> cars = new();
+
     List<Tours> tours = new();
+
     Tours mytour = new();
 
     int selectedProjectId = 1;
 
     protected override async Task OnInitializedAsync()
     {
+        // Refresh the lists of cars and tours
         Refresh();
+
         ClaimsPrincipal userClaims = (await SignInManager.Context.AuthenticateAsync()).Principal;
+
         if (userClaims != null)
             currentUser = await UserManager.GetUserAsync(userClaims);
 
         if (currentUser is null)
             return;
 
+        // Initialize a new tour with the current date and the current user's details
         mytour = new()
             {
                 Date = DateOnly.FromDateTime(DateTime.Now),
@@ -102,24 +138,56 @@
             };
     }
 
+    // This method refreshes the lists of cars and tours
     void Refresh()
     {
         cars = dbContext.Cars.ToList();
         tours = dbContext.Tours.ToList();
     }
 
+    // This method saves a tour
     void SaveEntry()
     {
+        // Set the car ID and car of the tour
         mytour.CardId = selectedProjectId;
         mytour.Car = cars.First(x => x.Id == selectedProjectId);
+
+        // Calculate the distance traveled
+        mytour.DistanceTraveled = mytour.OdometerEnd - mytour.OdometerStart;
+
+        // Add the tour to the database and save changes
         dbContext.Tours.Add(mytour);
         dbContext.SaveChanges();
-        mytour = new()
+
+        // Reset the tour for the next entry
+        mytour = new Tours
             {
                 Date = DateOnly.FromDateTime(DateTime.Now),
                 Employee = currentUser,
-                EmployeeId = currentUser.Id
+                EmployeeId = currentUser.Id,
+                // Initialize OdometerStart for the next entry if needed
+                OdometerStart = mytour.OdometerEnd,
             };
+
+        // Refresh the list of tours
         Refresh();
+    }
+
+    // This method deletes a tour
+    void DeleteEntry(Tours tour)
+    {
+        // Remove the tour from the database and save changes
+        dbContext.Tours.Remove(tour);
+        dbContext.SaveChanges();
+
+        // Refresh the list of tours
+        Refresh();
+    }
+
+    // This method edits a tour
+    void EditEntry(Tours tour)
+    {
+        // Set the tour to the tour that is passed in
+        mytour = tour;
     }
 }

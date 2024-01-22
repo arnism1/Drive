@@ -35,22 +35,24 @@
 </div>
 
 @code {
-
-
     List<Tours> records = new();
 
     List<Car> projects = new();
 
     protected override async Task OnInitializedAsync()
     {
+        // Retrieves all Tours records from the database and stores them in the records list.
         records = mycontext.Tours.ToList();
 
+        // Retrieves all Car records from the database and stores them in the projects list.
         projects = mycontext.Cars.ToList();
 
         foreach (var item in records)
         {
+            // Sets the Car property of the record by finding the matching Car in the database based on the CardId.
             item.Car = mycontext.Cars.First(x => x.Id == item.CardId);
 
+            // Sets the Employee property of the record by finding the matching User in the database based on the EmployeeId.
             item.Employee = mycontext.Users.First(x => x.Id == item.EmployeeId);
         }
     }

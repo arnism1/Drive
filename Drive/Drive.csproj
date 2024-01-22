@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\Scripts\SeedScript.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Data\Scripts\SeedScript.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Drive.Client\Drive.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
