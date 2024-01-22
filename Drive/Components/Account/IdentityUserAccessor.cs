@@ -1,4 +1,4 @@
-using Drive.Data;
+using Drive.Data.Entity;
 using Microsoft.AspNetCore.Identity;
 
 namespace Drive.Components.Account

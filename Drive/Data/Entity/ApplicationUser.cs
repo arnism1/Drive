@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Drive.Data
+namespace Drive.Data.Entity
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
         public string Vorname { get; set; }
         public string Nachname { get; set; }
         public string MitarbeiterID { get; set; }
+        public ICollection<Tours> Tours { get; set; }
     }
 }

@@ -1,0 +1,125 @@
+﻿@page "/records"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Drive.Data;
+@using Drive.Data.Entity
+
+@rendermode InteractiveServer
+
+@inject ApplicationDbContext dbContext
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@* @attribute [Authorize] *@
+
+<PageTitle>Entries</PageTitle>
+
+<h3 class="text-center fw-bold mb-4">Gesamte Buchungen</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <EditForm Model="@mytour" FormName="addEntry" OnValidSubmit="SaveEntry">
+                <div class="form-group">
+                    <label for="companyCars" class="text-center mb-2">CompanyCar</label>
+                    <select id="companyCars" @bind="selectedProjectId" class="form-control mb-3">
+                        @foreach (var project in cars)
+                        {
+                            <option value="@project.Id">@project.Brand</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="text-center mb-2">Beschreibung</label>
+                    <input id="description" class="form-control mb-2" @bind-value="mytour.Description" />
+                </div>
+                <div class="form-group w-50 ">
+                    <label for="date" class="text-center mb-2">Datum</label>
+                    <input id="date" @bind-value="mytour.Date" readonly="readonly" class="form-control mb-4 align-self-center" type="date" />
+                </div>
+                <div class="form-group w-50 ">
+                    <label for="start" class="text-center mb-2">Beginn</label>
+                    <input id="start" @bind-value="mytour.Start" class="form-control mb-4 align-self-center" type="time" />
+                </div>
+                <div class="form-group w-50 ">
+                    <label for="end" class="text-center mb-2">Abschluss</label>
+                    <input id="end" @bind-value="mytour.End" class="form-control mb-4 align-self-center" type="time" />
+                </div>
+                <button class="btn btn-primary w-50 mb-2">Buchung abschließen</button>
+            </EditForm>
+        </div>
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th>Id</th>
+                    <th>Titel</th>
+                    <th>Beschreibung</th>
+                    <th>Stunden</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in tours)
+                    {
+                        <tr>
+                            <td>@entry.Id</td>
+                            <td>@entry.Car.Brand</td>
+                            <td>@entry.Car.Model</td>
+                            <td>@entry.HoursWorked</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    ApplicationUser currentUser;
+    List<Car> cars = new();
+    List<Tours> tours = new();
+    Tours mytour = new();
+
+    int selectedProjectId = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Refresh();
+        ClaimsPrincipal userClaims = (await SignInManager.Context.AuthenticateAsync()).Principal;
+        if (userClaims != null)
+            currentUser = await UserManager.GetUserAsync(userClaims);
+
+        if (currentUser is null)
+            return;
+
+        mytour = new()
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now),
+                Employee = currentUser,
+                EmployeeId = currentUser.Id
+            };
+    }
+
+    void Refresh()
+    {
+        cars = dbContext.Cars.ToList();
+        tours = dbContext.Tours.ToList();
+    }
+
+    void SaveEntry()
+    {
+        mytour.CardId = selectedProjectId;
+        mytour.Car = cars.First(x => x.Id == selectedProjectId);
+        dbContext.Tours.Add(mytour);
+        dbContext.SaveChanges();
+        mytour = new()
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now),
+                Employee = currentUser,
+                EmployeeId = currentUser.Id
+            };
+        Refresh();
+    }
+}

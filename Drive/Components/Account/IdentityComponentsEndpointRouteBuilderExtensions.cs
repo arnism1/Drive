@@ -1,6 +1,6 @@
 using Drive.Components.Account.Pages;
 using Drive.Components.Account.Pages.Manage;
-using Drive.Data;
+using Drive.Data.Entity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;

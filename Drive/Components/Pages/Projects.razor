@@ -1,0 +1,88 @@
+﻿@page "/projects"
+@using System.ComponentModel.DataAnnotations
+@using Drive.Data.Entity
+@using Drive.Components.Pages
+@using Drive.Data;
+
+@inject ApplicationDbContext dbContext
+@rendermode InteractiveServer
+
+<PageTitle>Projects</PageTitle>
+
+<h3 class="text-center fw-bold mb-4">Cars</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <EditForm Model="@project" FormName="addProject" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="brand">Marke</label>
+                    <input id="brand" @bind-value="project.Brand" class="form-control mb-3" type="text" />
+                    <ValidationMessage For="@(() => project.Brand)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="model">Model:</label>
+                    <input id="model" @bind-value="project.Model" class="form-control mb-3" type="text" />
+                    <ValidationMessage For="@(() => project.Model)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="licensePlate">Kennzeichen</label>
+                    <input id="licensePlate" @bind-value="project.LicensePlate" class="form-control mb-3" type="text" />
+                    <ValidationMessage For="@(() => project.LicensePlate)" />
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-6">Auto hinzufügen</button>
+            </EditForm>
+        </div>
+
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Kennzeichen</th>
+                        <th>Marke</th>
+                        <th>Model</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in projects)
+                    {
+                        <tr>
+                            <td>@project.Id</td>
+                            <td>@project.LicensePlate</td>
+                            <td>@project.Brand</td>
+                            <td>@project.Model</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    List<Car> projects = new List<Car>();
+    Car project = new();
+    protected override async Task OnInitializedAsync()
+    {
+        Refresh();
+    }
+    void HandleValidSubmit()
+    {
+        dbContext.Cars.Add(project);
+        dbContext.SaveChanges();
+        project = new();
+        Refresh();
+    }
+    void Refresh()
+    {
+        projects = dbContext.Cars.ToList();
+    }
+}

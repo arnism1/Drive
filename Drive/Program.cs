@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Drive.Data.Entity;
 
 
 namespace Drive

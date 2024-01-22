@@ -1,5 +1,5 @@
 using Drive.Client;
-using Drive.Data;
+using Drive.Data.Entity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
